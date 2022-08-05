@@ -26,6 +26,8 @@ class Tag:
     LP=21
     RP=22
     END=23
+    EOS=24
+    IDENT=25
 
 class SUM(Token):
     def __init__(self):
@@ -90,13 +92,13 @@ class WRITE(Token):
 class REAL_NUMBER(Token):
     def __init__(self, inp):
         super().__init__(Tag.REAL_NUMBER)
-        self.value = 'ident'
+        self.value = 'numero_real'
         self.input = inp # name of the variable
 
 class INTEGER_NUMBER(Token):
     def __init__(self, inp):
         super().__init__(Tag.INTEGER_NUMBER)
-        self.value = 'ident'
+        self.value = 'numero_int'
         self.input = inp
 
 class ASSIGN(Token):
@@ -143,3 +145,14 @@ class END(Token):
     def __init__(self):
         super().__init__(Tag.END)
         self.value = 'end'
+
+class EOS(Token):
+    def __init__(self):
+        super().__init__(Tag.EOS)
+        self.value = '$'
+
+class IDENT(Token):
+    def __init__(self, identity):
+        super().__init__(Tag.IDENT)
+        self.value = 'ident'
+        self.ident = identity
