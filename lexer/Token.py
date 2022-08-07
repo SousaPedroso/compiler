@@ -18,16 +18,12 @@ class Tag:
     REAL_NUMBER=13
     INTEGER_NUMBER=14
     ASSIGN=15
-    LAST_POINT=16
-    OPEN_COMMENT=17
-    CLOSE_COMMENT=18
-    SLASH_OPEN_COMMENT=19
-    SLASH_CLOSE_COMMENT=20   
-    LP=21
-    RP=22
-    END=23
-    EOS=24
-    IDENT=25
+    LAST_POINT=16 
+    LP=17
+    RP=18
+    END=19
+    EOS=20
+    IDENT=21
 
 class SUM(Token):
     def __init__(self):
@@ -110,26 +106,6 @@ class LAST_POINT(Token):
     def __init__(self):
         super().__init__(Tag.LAST_POINT)
         self.value = '.'
-
-class OPEN_COMMENT(Token):
-    def __init__(self):
-        super().__init__(Tag.OPEN_COMMENT)
-        self.value = '{'
-
-class CLOSE_COMMENT(Token):
-    def __init__(self):
-        super().__init__(Tag.CLOSE_COMMENT)
-        self.value = '}'
-
-class SLASH_OPEN_COMMENT(Token):
-    def __init__(self):
-        super().__init__(Tag.SLASH_OPEN_COMMENT)
-        self.value = '/*'
-
-class SLASH_CLOSE_COMMENT(Token):
-    def __init__(self):
-        super().__init__(Tag.SLASH_CLOSE_COMMENT)
-        self.value = '*/'
 
 class LP(Token):
     def __init__(self):
