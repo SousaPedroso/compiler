@@ -1,0 +1,39 @@
+First(programa) = program
+First(corpo) = First(dc) = real, integer, λ
+First(dc) = First(dc_v), λ = real, integer, λ
+First(mais_dc) = ;, λ
+First(dc_v) = First(tipo_var) = real, integer
+First(tipo_var) = real, integer
+First(variaveis) = ident
+First(mais_var) = ',', λ
+First(comandos) =  First(comando) = read, write, ident
+First(comando) = read, write, ident
+First(mais_comandos) = ;, λ
+First(expressao) = First(termo) = -, λ
+First(termo) = First(op_un) = -, λ
+First(op_un) = -, λ
+First(fator) = ident, numero_int, numero_real, (
+First(outros_termos) = First(op_ad), λ = +, -, λ
+First(op_ad) = +, -
+First(mais_fatores) = First(op_mul), λ = *, /, λ
+First(op_mul) = *, /
+
+Follow(programa) = $
+Follow(corpo) = .
+Follow(dc) = begin, Follow(mais_dc) = begin
+Follow(mais_dc) = Follow(dc) = begin
+Follow(dc_v) = First(mais_dc) = ;, λ = ;, Follow(dc) = ;, begin
+Follow(tipo_var) = :
+Follow(variaveis) = Follow(dc_v), Follow(mais_var) = ;, begin
+Follow(mais_var) = Follow(variaveis) = ;, begin
+Follow(comandos) = end, Follow(mais_comandos) = end
+Follow(mais_comandos) = Follow(comandos) = end
+Follow(comando) = First(mais_comandos) = ;, λ = ;, Follow(comandos) = ;, end
+Follow(expressao) = Follow(comando) = ;, end
+Follow(termo) = First(outros_termos) = +, -, λ = +, -, Follow(expressao), Follow(outros_termos) = +, -, ;, end
+Follow(outros_termos) = Follow(expressao) = ;, end
+Follow(op_un) = First(fator) = ident, numero_int, numero_real, (
+Follow(fator) = First(mais_fatores) = *, /, λ = *, /, Follow(termo), Follow(mais_fatores) = *, /, +, -, ;, end
+Follow(mais_fatores) = Follow(termo) = +, -, ;, end
+Follow(op_ad) = First(termo) = -, λ = -, First(outros_termos) = -, +, -, λ = -, +, Follow(outros_termos) = +, -, ;, end
+Follow(op_mul) = First(fator) = ident, numero_int, numero_real, (
