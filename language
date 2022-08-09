@@ -2,26 +2,26 @@ Especificação da Sintaxe da Linguagem LALG
 - Comentários na LALG: entre { } ou /* */
 
 
-<programa> -> program ident <corpo> .
-<corpo> -> <dc> begin <comandos> end
-<dc> -> <dc_v> <mais_dc>  | λ
-<mais_dc> -> ; <dc> | λ
-<dc_v> ->  <tipo_var> : <variaveis>
-<tipo_var> -> real | integer
-<variaveis> -> ident <mais_var>
-<mais_var> -> , <variaveis> | λ
-<comandos> -> <comando> <mais_comandos>
-<mais_comandos> -> ; <comandos> | λ
+<programa> -> program ident <corpo> . # r1
+<corpo> -> <dc> begin <comandos> end # r2
+<dc> -> <dc_v> <mais_dc>  | λ # r3, r4
+<mais_dc> -> ; <dc> | λ # r5, r6
+<dc_v> ->  <tipo_var> : <variaveis> # r7
+<tipo_var> -> real | integer # r8, r9
+<variaveis> -> ident <mais_var> # r10
+<mais_var> -> , <variaveis> | λ # r11, r12
+<comandos> -> <comando> <mais_comandos> # r13
+<mais_comandos> -> ; <comandos> | λ # r14, r15
 
-<comando> -> 	read (ident) |
+<comando> -> 	read (ident) | # r16, r17, r18
 							write (ident) |
 							ident := <expressao>
 							
-<expressao> -> <termo> <outros_termos>
-<termo> -> <op_un> <fator> <mais_fatores>
-<op_un> -> - | λ
-<fator> -> ident | numero_int | numero_real | (<expressao>)
-<outros_termos> -> <op_ad> <termo> <outros_termos> | λ
-<op_ad> -> + | -
-<mais_fatores> -> <op_mul> <fator> <mais_fatores> | λ
-<op_mul> -> * | /
+<expressao> -> <termo> <outros_termos> # r19
+<termo> -> <op_un> <fator> <mais_fatores> # r20
+<op_un> -> - | λ # r21, r22
+<fator> -> ident | numero_int | numero_real | (<expressao>) # r23, r24, r25, r26
+<outros_termos> -> <op_ad> <termo> <outros_termos> | λ # r27, r28
+<op_ad> -> + | - # r29, r30
+<mais_fatores> -> <op_mul> <fator> <mais_fatores> | λ # r31, r32
+<op_mul> -> * | / # r33, r34
