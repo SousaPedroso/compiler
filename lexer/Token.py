@@ -24,6 +24,7 @@ class Tag:
     END=19
     EOS=20
     IDENT=21
+    COLON=22
 
 class SUM(Token):
     def __init__(self):
@@ -132,3 +133,8 @@ class IDENT(Token):
         super().__init__(Tag.IDENT)
         self.value = 'ident'
         self.ident = identity
+
+class COLON(Token):
+    def __init__(self):
+        super().__init__(Tag.COLON)
+        self.value = ':'
