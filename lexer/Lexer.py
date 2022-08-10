@@ -167,7 +167,6 @@ class Lexer:
                             self.stop_pos += 1
                             action = self.automata[action[1]].get(self.source_code[self.stop_pos])
 
-                        self.stop_pos += 1
                         # if None (integer)
                         if last_state == 48:
                             return INTEGER_NUMBER(buffer)
