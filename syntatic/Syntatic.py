@@ -1,4 +1,5 @@
 from .SyntaxError import SyntaxError
+from semantic.Semantic import Semantic
 from lexer.Token import *
 
 class Syntatic:
@@ -78,52 +79,62 @@ class Syntatic:
     # M: Mult
     # D: Div
     # IT: Initialize
+    # T: Type for a variable
+    # DT: Delete type for a variable
+    # U: Unary operator (-1)
+    # AS: Assignment for a identifier
+    # R: Input
+    # W: print
+    # EX: expression (POP VALUES FROM TWO STACKS AND COMPUTES THE VALUE)
+    # SO: SumOperation (the operation to be applied)
+    # SUO: SUbtrationOperation
+    # NI: NumeroInteiro
+    # NR: NumeroReal
+    # TE: Termo
+    # MO: MultiplicationOperation
+    # DO: DivisionOperation
+    # EA: ExpressionAttribution
+    # MF: MaisFatores
+    # ID: IDent
+    # PU: ProductUnit
+    # SU: SumUnit
+
+    identities = {"sum": 0, "sub": 0, "mul": 1, "div": 1}
 
     # Defines how each non terminal will be updated according to the operation
-    operations = {"I": lambda S: S, "A": lambda E, T:  E+T, "S": lambda E, T:  E-T,
-    "M": lambda T, P: T*P, "D": lambda T, P: T/P, "R": lambda E: E.pop()}
+    operations = {"T": lambda T, V: T.append(V), "DT": lambda T: T.pop(), "AS": lambda N: N.pop(),
+    "U": lambda V: -1*V, "R": input, "W": lambda V: print(V), "EX": lambda OP1, OP2: (OP1.pop(), OP2.pop()),
+    "SO": "sum", "SUO": "sub", "NI": lambda N: N, "NR": lambda N: N, "TE": lambda FA, MF: (FA.pop(), MF.pop()),
+    "MO": "mul", "DO": "div", "EA": lambda E: E.pop(), "MF": lambda FA, MF: (FA.pop(), MF.pop()),
+    "OT": lambda FA, MF: (FA.pop(), MF.pop()), "ID": lambda I: I, "PU": "",
+    "SU": lambda OT: OT.append(0)}
 
+    a = []
     # Stores the rules to each state to recover the value for each operation
     rules = {
-        3: {"begin": "IT"},
-        6: {"begin": "IT"},
-        8: {},
-        9: {},
-        11: {},
-        12: {},
-        15: {},
-        19: {},
-        20: {},
-        21: {},
-        22: {},
-        23: {},
-        27: {},
-        28: {},
-        30: {},
-        33: {},
-        34: {},
-        36: {},
-        37: {},
-        38: {},
-        39: {},
-        40: {},
-        41: {},
-        42: {},
-        43: {},
-        44: {},
-        45: {},
-        46: {},
-        47: {},
-        48: {},
-        50: {},
-        51: {},
-        53: {},
-        54: {},
-        55: {},
-        56: {},
-        57: {},
-        58: {},
-        59: {}
+        8: {":": "T"},
+        9: {":": "T"},
+        20: {"begin": "DT", ";": "DT"},
+        33: {"end": "AS", ";": "AS"},
+        34: {"end": "SU", ";": "SU", ")": "SU"},
+        36: {"ident": "U", "(": "U", "numero_int": "U", "numero_real": "U"},
+        38: {"end": "R", ";": "R"},
+        39: {"end": "W", ";": "W"},
+        40: {"end": "EX", ";": "EX", ")": "EX"},
+        42: {"ident": "SO", "end": "SO", ";": "SO", "(": "SO", "+": "SO", "-": "SO", "numero_int": "SO", "numero_real": "SO"},
+        43: {"ident": "SUO", "end": "SUO", ";": "SUO", "(": "SUO", "+": "SUO", "-": "SUO", "numero_int": "SUO", "numero_real": "SUO"},
+        44: {"end": "NI", ";": "NI", "*": "NI", "/": "NI", "+": "NI", "-": "NI"},
+        45: {"end": "NR", ";": "NR", "*": "NR", "/": "NR", "+": "NR", "-": "NR"},
+        47: {"end": "SU", ";": "SU", ")": "SU"},
+        48: {"end": "TE", ";": "TE", ")": "TE", "+": "TE", "-": "TE"},
+        50: {"ident": "MO", "(": "MO", "numero_int": "MO", "numero_real": "MO"},
+        51: {"ident": "DO", "(": "DO", "numero_int": "DO", "numero_real": "DO"},
+        53: {"end": "PU", ";": "PU", "+": "PU", "-": "PU"},
+        54: {"end": "EA", ";": "EA", "*": "EA", "/": "EA", "+": "EA", "-": "EA"},
+        55: {"end": "MF", ";": "MF", "+": "MF", "-": "MF"},
+        56: {"end": "OT", ";": "OT", ")": "OT"},
+        58: {"end": "PU", ";": "PU", "+": "PU", "-": "PU"},
+        59: {"end": "ID", ";": "ID", "*": "ID", "/": "ID", "+": "ID", "-": "ID"}
     }
 
     def __init__(self, inputs, alert=False):
@@ -131,26 +142,38 @@ class Syntatic:
         self.inputs = inputs
         # Stores the symbols and update the values for each operation
         # Remembering that "programa" contains the final result
-        self.non_terminals = {"programa": [], "corpo": [], "dc": [], "dc_v": [], "mais_dc": [], "tipo_var": [], "variaveis": [], "mais_var": [],
-        "comandos": [], "mais_comandos": [], "comando": [], "expressao": [], "termo": [], "op_un": [], "fator": [], "mais_fatores": [], "outros_termos": [],
+        self.non_terminals = {"comandos": [], "mais_comandos": [], "comando": [], "expressao": [], "termo": [], "fator": [], "mais_fatores": [], "outros_termos": [],
         "op_ad": [], "op_mul": []}
         self.terminals = {"numero_real": 0, "numero_int": 0}
         self.states = [0]
         self.symbols = []
         self.action = "T" # Search on Terminals or NonTerminals
         self.accepted = False
-        self.object = [] # Store operations for object code
+        self.object = {"I": [], "D": []} # Store operations for object code
+        self.identifiers = {}
+        self.current_type = [] # Store the types for a variable
+        self.unary = 1
+        self.arithmetic = []
 
     def evaluate_input(self):
         # Abbreviation
         inputs = self.inputs
-
+        tokens = []
+        step = 0
+        last_identifier = ""
 
         while not(self.accepted):
             
             # If Terminal, update the value
             value = inputs[0].value
-            # print(self.states, self.symbols)
+            step += 1
+            # print(f"Step {step}")
+            # print(f"States {self.states}")
+            # print(f"Variables: {self.identifiers}")
+            # print(f"Input: {inputs}")
+            # print(f"Symbols: {self.symbols}")
+            # print(f"Non terminals: {self.non_terminals}")
+            # print(f"Operations: {self.arithmetic}")
             if self.terminals.get(value) != None:
                 self.terminals[value] = inputs[0].input
 
@@ -166,7 +189,8 @@ class Syntatic:
                             print(f"Shift to {action[1]}")
 
                         self.states.append(action[1])
-                        self.symbols.append(value)
+                        self.symbols.append(inputs[0].value)
+                        tokens.append(inputs[0])
                         last_input = self.inputs[0]
                         del(self.inputs[0])
 
@@ -176,25 +200,133 @@ class Syntatic:
                         if self.alert:
                             print("Reduced ", end="")
 
-                        # Get the rule for the value
+                        # Get semantic rule for the state
                         rule = self.rules.get(self.states[-1])
-                        rule_type = rule.get(value)
+                        if rule != None:
+                            rule_type = rule.get(value)
+                            if rule_type == "T":
+                                # Set the current type for the variables
+                                self.operations.get("T")(self.current_type, tokens[-1].value)
+                                
+                            # Clear the type (expecting other type or begin of the program)
+                            elif rule_type == "DT":
+                                self.operations.get("DT")(self.current_type)
+                            
+                            elif rule_type == "AS":
+                                self.identifiers[tokens[-3].ident] = self.operations.get("AS")(self.non_terminals["expressao"])
+                                last_identifier = tokens[-3].ident
 
+                            elif rule_type == "SU":
+                                self.operations.get("SU")(self.non_terminals["outros_termos"])
+
+                            elif rule_type == "U":
+                                self.identifiers[last_identifier] = self.operations.get("U")(self.identifiers[last_identifier])
+                            
+                            elif rule_type == "R":
+                                self.identifiers[tokens[-2].ident] = float(self.operations.get("R")())
+                                
+                            elif rule_type == "W":
+                                self.operations.get("W")(self.identifiers[tokens[-2].ident])
+
+                            elif rule_type == "EX":
+                                op1, op2 = self.operations.get("EX")(self.non_terminals["termo"], self.non_terminals["outros_termos"])
+                                operation = self.arithmetic[-1]
+                                # print(f"\n\n\nOP1: {op1}, OP2: {op2}, OPERATION: {operation}\n\n\n")
+                                if operation == "sum":
+                                    self.non_terminals["expressao"].append(op1+op2)
+                                    
+                                elif operation == "sub":
+                                    self.non_terminals["expressao"].append(op1-op2)
+                                    
+                                elif operation == "mul":
+                                    self.non_terminals["expressao"].append(op1*op2)
+
+                                else:
+                                    self.non_terminals["expressao"].append(op1/op2)
+
+                            elif rule_type == "NR":
+                                self.non_terminals["fator"].append(tokens[-1].input)
+
+                            elif rule_type == "NI":
+                                self.non_terminals["fator"].append(tokens[-1].input)
+
+                            elif rule_type == "TE":
+                                
+                                op1, op2 = self.operations.get("TE")(self.non_terminals["fator"], self.non_terminals["mais_fatores"])
+                                operation = self.arithmetic[-1]
+                                # print(f"\n\n\nOP1: {op1}, OP2: {op2}\n\n\n")
+                                if operation == "sum":
+                                    self.non_terminals["termo"].append(op1+op2)
+                                    
+                                elif operation == "sub":
+                                    self.non_terminals["termo"].append(op1-op2)
+                                    
+                                elif operation == "mul":
+                                    self.non_terminals["termo"].append(op1*op2)
+
+                                else:
+                                    self.non_terminals["termo"].append(op1/op2)
+
+                            elif rule_type == "EA":
+                                self.non_terminals["fator"].append(self.operations.get("EA")(self.non_terminals["expressao"]))
+                                
+                            elif rule_type == "PU":
+                                self.non_terminals["mais_fatores"].append(self.identities[self.arithmetic[-1]])
+
+                            elif rule_type == "MF":
+                                op1, op2 = self.operations.get("MF")(self.non_terminals["fator"], self.non_terminals["mais_fatores"])
+                                operation = self.arithmetic[-1]
+                                if operation == "sum":
+                                    self.non_terminals["mais_fatores"].append(op1+op2)
+                                    
+                                elif operation == "sub":
+                                    self.non_terminals["mais_fatores"].append(op1-op2)
+                                    
+                                elif operation == "mul":
+                                    self.non_terminals["mais_fatores"].append(op1*op2)
+
+                                else:
+                                    self.non_terminals["mais_fatores"].append(op1/op2)
+
+                            elif rule_type == "OT":
+                                op1, op2 = self.operations.get("OT")(self.non_terminals["termo"], self.non_terminals["outros_termos"])
+                                operation = self.arithmetic[-1]
+                                if operation == "sum":
+                                    self.non_terminals["outros_termos"].append(op1+op2)
+                                    
+                                elif operation == "sub":
+                                    self.non_terminals["outros_termos"].append(op1-op2)
+                                    
+                                elif operation == "mul":
+                                    self.non_terminals["outros_termos"].append(op1*op2)
+
+                                else:
+                                    self.non_terminals["outros_termos"].append(op1/op2)
+
+                            elif rule_type == "ID":
+                                # print(tokens[-1].ident)
+                                self.non_terminals["fator"].append(self.identifiers[tokens[-1].ident])
+
+                        # print(self.non_terminals, tokens[-1])
                         # Store the symbol position to print it
                         symbol = len(self.symbols)-action[2]
 
-                        # print(rule_type, self.non_terminals)
+                        # Check state for arithmetic operation
+                        if self.states[-1] == 42 or self.states[-1] == 43 or self.states[-1] == 50 or self.states[-1] == 51:
+                            self.arithmetic.append(self.operations[rule_type])
 
                         # Remove symbols
                         for _ in range(action[2]):
                             if self.alert:
                                 print(self.symbols[symbol], end="")
                             del(self.symbols[symbol])
+                            del(tokens[symbol])
                             del(self.states[-1])
 
                         # Update the last 
                         # Add the correspondent symbol
                         self.symbols.append(action[1])
+                        tokens.append(action[1])
                         # Check for next Nonterminal
                         self.action = 'N'
                         if self.alert:
