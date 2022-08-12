@@ -12,7 +12,7 @@ class Syntatic:
     table = [{"T": {"program": ["s", 2]}, "N": {"programa": 1}}, # I0
     {"T": {"$": ["acc"]}}, # I1
     {"T": {"ident": ["s", 3]}}, # I2
-    {"T": {"begin": ["r", "dc", 0], "real": ["s", 8], "integer": ["s", 9], "$": ["r", "T", 1]}, "N": {"corpo": 4, "dc": 5, "dc_v": 6, "tipo_var": 7}}, # I3
+    {"T": {"begin": ["r", "dc", 0], "real": ["s", 8], "integer": ["s", 9]}, "N": {"corpo": 4, "dc": 5, "dc_v": 6, "tipo_var": 7}}, # I3
     {"T": {".": ["s", 57]}}, # I4
     {"T": {"begin": ["s", 10]}}, # I5
     {"T": {"begin": ["r", "mais_dc", 0], ";": ["s", 12]}, "N": {"mais_dc": 11}}, # I6
@@ -27,10 +27,10 @@ class Syntatic:
     {"T": {"end": ["r", "mais_comandos", 0], ";": ["s", 24]}, "N": {"mais_comandos": 23}}, # I15
     {"T": {"(": ["s", 25]}}, # I16
     {"T": {"(": ["s", 26]}}, # I17
-    {"T": {":=", ["s", 27]}}, # I18
+    {"T": {":=": ["s", 27]}}, # I18
     {"T": {"begin": ["r", "mais_dc", 2]}}, # I19
     {"T": {"begin": ["r", "dc_v", 3], ";": ["r", "dc_v", 3]}}, # I20
-    {"T": {"begin": ["r", "mais_var", 12], ";": ["r", "mais_var", 12], ",": ["s", 29]}, "N": {"mais_var": 28}}, # I21
+    {"T": {"begin": ["r", "mais_var", 0], ";": ["r", "mais_var", 0], ",": ["s", 29]}, "N": {"mais_var": 28}}, # I21
     {"T": {".": ["r", "corpo", 4]}}, # I22
     {"T": {"end": ["r", "comandos", 2]}}, # I23
     {"T": {"ident": ["s", 18], "read": ["s", 16], "write": ["s", 17]}, "N": {"comandos": 30, "comando": 15}}, # I24
@@ -38,7 +38,7 @@ class Syntatic:
     {"T": {"ident": ["s", 32]}}, # I26
     {"T": {"ident": ["r", "op_un", 0], "(": ["r", "op_un", 0], "-": ["s", 36], "numero_int": ["r", "op_un", 0], "numero_real": ["r", "op_un", 0]}, "N": {"expressao": 33, "termo": 34, "op_un": 35}}, # I27
     {"T": {"begin": ["r", "variaveis", 2], ";": ["r", "variaveis", 2]}}, # I28
-    {"T": {"ident": ["s", "21"]}, "N": {"variaveis": 37}}, # I29
+    {"T": {"ident": ["s", 21]}, "N": {"variaveis": 37}}, # I29
     {"T": {"end": ["r", "mais_comandos", 2]}}, # I30
     {"T": {")": ["s", 38]}}, # I31
     {"T": {")": ["s", 39]}}, # I32
@@ -77,6 +77,7 @@ class Syntatic:
     # S: Sub
     # M: Mult
     # D: Div
+    # IT: Initialize
 
     # Defines how each non terminal will be updated according to the operation
     operations = {"I": lambda S: S, "A": lambda E, T:  E+T, "S": lambda E, T:  E-T,
@@ -84,8 +85,8 @@ class Syntatic:
 
     # Stores the rules to each state to recover the value for each operation
     rules = {
-        3: {},
-        6: {},
+        3: {"begin": "IT"},
+        6: {"begin": "IT"},
         8: {},
         9: {},
         11: {},
@@ -127,14 +128,7 @@ class Syntatic:
 
     def __init__(self, inputs, alert=False):
         self.alert = alert
-        self.current = 0 # Current input
         self.inputs = inputs
-        self.reset_state()
-        # S indicates for which value the state must be updated
-        # R has two values, 1 string for indicate which token will substitute the current(s) and
-        # a integer indicating the number of tokens to remove
-
-    def reset_state(self):
         # Stores the symbols and update the values for each operation
         # Remembering that "programa" contains the final result
         self.non_terminals = {"programa": [], "corpo": [], "dc": [], "dc_v": [], "mais_dc": [], "tipo_var": [], "variaveis": [], "mais_var": [],
@@ -145,6 +139,7 @@ class Syntatic:
         self.symbols = []
         self.action = "T" # Search on Terminals or NonTerminals
         self.accepted = False
+        self.object = [] # Store operations for object code
 
     def evaluate_input(self):
         # Abbreviation
@@ -155,8 +150,9 @@ class Syntatic:
             
             # If Terminal, update the value
             value = inputs[0].value
+            # print(self.states, self.symbols)
             if self.terminals.get(value) != None:
-                self.terminals[value] = inputs[0].inp
+                self.terminals[value] = inputs[0].input
 
             # Action for terminals
             if self.action == "T":
@@ -207,10 +203,7 @@ class Syntatic:
                     # accepted sentence
                     else:
                         # First value of the stack (and probably the only one)
-                        print(f"Value for the input {self.current+1}: {str(self.non_terminals['programa'][0]).replace('.', ',')}")
                         self.accepted = True
-                        self.current += 1
-                        self.reset_state()
                         return True
 
                 # Syntax error
