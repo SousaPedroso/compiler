@@ -162,17 +162,17 @@ class Lexer:
                         buffer = ""
                         last_state = 48
                         while self.stop_pos != self.tam and action != None and action[0] != 'r':
-                            buffer = self.automata[cur_pos]
+                            buffer = f"{buffer}{self.source_code[self.stop_pos]}"
                             last_state = action[1]
                             self.stop_pos += 1
                             action = self.automata[action[1]].get(self.source_code[self.stop_pos])
 
                         # if None (integer)
                         if last_state == 48:
-                            return INTEGER_NUMBER(buffer)
+                            return INTEGER_NUMBER(int(buffer))
 
                         elif last_state == 52:
-                            return REAL_NUMBER(buffer)
+                            return REAL_NUMBER(float(buffer))
 
                         # Last state == 50, missed precision of the number
                         else:
