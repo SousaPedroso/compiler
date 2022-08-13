@@ -33,7 +33,6 @@ class Semantic:
     "OT": lambda FA, MF: (FA.pop(), MF.pop()), "ID": lambda I: I, "PU": "",
     "SU": lambda OT: OT.append(0)}
 
-    a = []
     # Stores the rules to each state to recover the value for each operation
     rules = {
         8: {":": "T"},
