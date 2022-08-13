@@ -72,7 +72,7 @@ class Lexer:
 
         action = self.automata[state].get(self.source_code[self.stop_pos])
         char_code = ord(self.source_code[self.stop_pos])
-        
+
         # Not in the automata and not letter
         if self.stop_pos+1 < self.tam and action == None and ((char_code > 122 or char_code < 97) and (char_code > 90 or char_code < 65)):
             raise InvalidTokenError(f"Invalid token {self.source_code[self.stop_pos]} at line {self.line}")
@@ -224,3 +224,6 @@ class Lexer:
 
         else:
             return EOS()
+
+        # Invalid token
+        raise InvalidTokenError(f"Invalid token {self.source_code[self.stop_pos]} at {self.line}")
