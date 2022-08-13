@@ -58,8 +58,12 @@ class Lexer:
 
             else:
                 break
+        
+        if self.stop_pos < self.tam:
+            return cur_pos
 
-        return cur_pos
+        else:
+            return self.stop_pos
 
     def get_token(self):
         state = 0
@@ -68,16 +72,16 @@ class Lexer:
 
         action = self.automata[state].get(self.source_code[self.stop_pos])
         char_code = ord(self.source_code[self.stop_pos])
-
+        
         # Not in the automata and not letter
-        if self.stop_pos+1 != self.tam and action == None and ((char_code > 122 or char_code < 97) and (char_code > 90 or char_code < 65)):
+        if self.stop_pos+1 < self.tam and action == None and ((char_code > 122 or char_code < 97) and (char_code > 90 or char_code < 65)):
             raise InvalidTokenError(f"Invalid token {self.source_code[self.stop_pos]} at line {self.line}")
 
-        elif action != None and action[0] == 's':
+        elif self.stop_pos+1 < self.tam and action != None and action[0] == 's':
             state = action[1]
 
             # Get next action to check possible commentary with /*
-            if self.stop_pos +1 != self.tam: # last token
+            if self.stop_pos +1 < self.tam: # last token
                 next_action = self.automata.get(state)
                 if next_action != None:
                     next_action = next_action.get(self.source_code[self.stop_pos +1])
@@ -113,12 +117,12 @@ class Lexer:
 
                     # Second condition of commentary
                     elif (state == 56 and self.source_code[cur_pos] == '*'):
-                        if cur_pos+1 != self.tam and self.source_code[cur_pos+1] == '/':
+                        if cur_pos+1 < self.tam and self.source_code[cur_pos+1] == '/':
                             self.stop_pos = cur_pos+2
                             break
 
 
-            if self.stop_pos != self.tam:
+            if self.stop_pos < self.tam:
                 self.stop_pos = self.ignore_spaces()
                 action = self.automata[0].get(self.source_code[self.stop_pos])
                 char_code = ord(self.source_code[self.stop_pos])
@@ -196,12 +200,12 @@ class Lexer:
                 return EOS()
 
         # Check for return the token 
-        elif self.stop_pos+1 != self.tam and action != None:
+        elif self.stop_pos+1 < self.tam and action != None:
             self.stop_pos += 1
             return action[1]()
 
         # letter, _ or digit for ident
-        elif self.stop_pos+1 != self.tam:
+        elif self.stop_pos+1 < self.tam:
             # MUST start with letter, this is the goal of the if statement
             if (char_code <= 122 and char_code >= 97) or (char_code <= 90 and char_code >= 65):
                 buffer = ""
@@ -213,7 +217,10 @@ class Lexer:
 
                 return IDENT(buffer)
 
+        # Last point
+        elif self.stop_pos+1 == self.tam and self.source_code[self.stop_pos] == ".":
+            self.stop_pos +=1
+            return LAST_POINT()
+
         else:
             return EOS()
-
-# Checar o que estou passando batido para parênteses
