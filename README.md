@@ -15,7 +15,7 @@ Using the ascendent syntatic, the automata which describes the rules for the <a 
 </p>
 
 
-None package was used for this project, but for execute it you must install this repository as a package due to the directories organization, running the following command on the root of this repository:
+None external package was used for this project, but for execute it you must install this repository as a package due to the directories organization, running the following command on the root of this repository:
 
 ```
 python -m pip install .
