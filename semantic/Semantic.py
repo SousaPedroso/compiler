@@ -26,7 +26,7 @@ class Semantic:
 
 
     # Defines how each non terminal will be updated according to the operation
-    operations = {"T": lambda T, V: T.update({V: ''}), "DT": lambda T: T.pop(), "AS": lambda N: N.pop(),
+    operations = {"T": lambda T, V: T.update({V: ''}), "DT": "", "AS": lambda N: N.pop(),
     "U": lambda V: -1*V, "R": input, "W": lambda V: print(V), "EX": lambda OP1, OP2: (OP1.pop(), OP2.pop()),
     "SO": "sum", "SUO": "sub", "NI": lambda N: N, "NR": lambda N: N, "TE": lambda FA, MF: (FA.pop(), MF.pop()),
     "MO": "mul", "DO": "div", "EA": lambda E: E.pop(), "MF": lambda FA, MF: (FA.pop(), MF.pop()),
