@@ -20,6 +20,7 @@ class Semantic:
     # ID: IDent
     # PPO: PushProductOperation
     # PAO: PushAddOperation
+    # PO: PopOperation (fator -> (<expressao>)) The expression was solved
 
     # Defines how each non terminal will be updated according to the operation
     operations = {"T": lambda T, V: T.update({V: ''}), "MO": "MULT", "DO": "DIVI", "SO": "SOMA", "SUO": "SUBT"}
@@ -34,13 +35,14 @@ class Semantic:
         39: {"end": "W", ";": "W"},
         42: {"ident": "SO", "end": "SO", ";": "SO", "(": "SO", "+": "SO", "-": "SO", "numero_int": "SO", "numero_real": "SO"},
         43: {"ident": "SUO", "end": "SUO", ";": "SUO", "(": "SUO", "+": "SUO", "-": "SUO", "numero_int": "SUO", "numero_real": "SUO"},
-        44: {"end": "NI", ";": "NI", "*": "NI", "/": "NI", "+": "NI", "-": "NI"},
-        45: {"end": "NR", ";": "NR", "*": "NR", "/": "NR", "+": "NR", "-": "NR"},
+        44: {"end": "NI", ";": "NI", "*": "NI", "/": "NI", "+": "NI", "-": "NI", ")": "NI"},
+        45: {"end": "NR", ";": "NR", "*": "NR", "/": "NR", "+": "NR", "-": "NR", ")": "NR"},
         50: {"ident": "MO", "(": "MO", "numero_int": "MO", "numero_real": "MO"},
+        54: {"end": "PO", ";": "PO", "*": "PO", "/": "PO", "+": "PO", "-": "PO", ")": "PO"},
         51: {"ident": "DO", "(": "DO", "numero_int": "DO", "numero_real": "DO"},
-        55: {"end": "PPO", ";": "PPO", "+": "PPO", "-": "PPO"},
+        55: {"end": "PPO", ";": "PPO", "+": "PPO", "-": "PPO", ")": "PPO"},
         56: {"end": "PAO", ";": "PAO", ")": "PAO"},
-        59: {"end": "ID", ";": "ID", "*": "ID", "/": "ID", "+": "ID", "-": "ID"}
+        59: {"end": "ID", ";": "ID", "*": "ID", "/": "ID", "+": "ID", "-": "ID", ")": "ID"}
     }
 
     def __init__(self):

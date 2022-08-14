@@ -77,7 +77,6 @@ class Syntatic(Semantic):
     def __init__(self, inputs):
         super().__init__()
         self.inputs = inputs
-        self.terminals = {"numero_real": 0, "numero_int": 0}
         self.states = [0]
         self.symbols = []
         self.action = "T" # Search on Terminals or NonTerminals
@@ -190,6 +189,9 @@ class Syntatic(Semantic):
                             elif rule_type == "PAO":
                                 # Respective operation from the state I42 or I43
                                 self.intermediary_code.append(f"{self.arithmetic[-1]}\n")
+
+                            elif rule_type == "PO":
+                                self.arithmetic.pop()
                             
 
                         # Check state for arithmetic operation
