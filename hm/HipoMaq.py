@@ -1,4 +1,3 @@
-from hm.ModeError import ModeError
 from lexer.Lexer import Lexer
 from lexer.Token import Tag
 from syntatic.Syntatic import Syntatic
@@ -13,7 +12,7 @@ parser.add_argument(
 
 parser.add_argument(
     "dest_code",
-    help="Destinatio file when compiling the source_code",
+    help="Destination file when compiling the source_code",
 )
 
 args = parser.parse_args()
@@ -22,7 +21,7 @@ class HipoMaq:
     
     def __init__(self, source_code):
         self.source_code = source_code
-        self.data = None
+        self.data = []
         self.instructions = None
         self.ins_top = None
         self.data_top = None
@@ -31,30 +30,91 @@ class HipoMaq:
         self.data_top = -1
         self.ins_top = 0
         self.set_instructions = {}
-        self.data = []
 
-        with open(self.source_code, "r") as object_code:
+        with open(args.dest_code, "r") as object_code:
             self.instructions = object_code.readlines()
 
         while self.instructions[self.ins_top] != "PARA":
-            
-            if self.instructions[self.ins_top] == "INPP":
-                self.ins_top += 1
-                continue
-        
-            elif self.instructions[self.ins_top] == "IMPR":
+            # Remove '\n'
+            instruction = self.instructions[self.ins_top]
+            self.instructions[self.ins_top] = instruction[:len(instruction)-1]
+
+            # INPP is ignored
+            if self.instructions[self.ins_top] == "IMPR":
                 print(self.data[self.data_top])
                 self.data.pop()
-                self.data_top =- 1
+                self.data_top -= 1
 
             elif self.instructions[self.ins_top] == "LEIT":
-                
+                inp = float(input())
+                self.data_top += 1
+                self.data.append(inp)
+
+            elif self.instructions[self.ins_top] == "ALME 1":
+                self.data_top += 1
+                self.data.append(0)
+
+            elif self.instructions[self.ins_top][:4] == "ARMZ":
+                address =  ""
+                for d in self.instructions[self.ins_top][5:]:
+                    address = f"{address}{d}"
+
+                address = int(address)
+                self.data[address] = self.data[self.data_top]
+                self.data.pop()
+                self.data_top -= 1
+
+            elif self.instructions[self.ins_top] == "INVE":
+                self.data[self.data_top] *= -1
+
+            elif self.instructions[self.ins_top] == "SOMA":
+                self.data[self.data_top-1] = self.data[self.data_top-1] + self.data[self.data_top]
+                self.data_top -= 1
+                self.data.pop()
+
+            elif self.instructions[self.ins_top] == "SUB":
+                self.data[self.data_top-1] = self.data[self.data_top-1] - self.data[self.data_top]
+                self.data_top -= 1
+                self.data.pop()
+
+            elif self.instructions[self.ins_top] == "MULT":
+                self.data[self.data_top-1] = self.data[self.data_top-1] * self.data[self.data_top]
+                self.data_top -= 1
+                self.data.pop()
+
+            elif self.instructions[self.ins_top] == "DIVI":
+                self.data[self.data_top-1] = self.data[self.data_top-1] / self.data[self.data_top]
+                self.data_top -= 1
+                self.data.pop()
+
+            elif self.instructions[self.ins_top][:4] == "CRCT":
+                # If find  a '.', it is a float
+                buffer = ""
+                buffer_type = "i"
+                for char in self.instructions[self.ins_top][5:]:
+                    buffer = f"{buffer}{char}"
+                    if char == '.':
+                        buffer_type = "f"
+
+                if buffer_type == "i":
+                    self.data.append(int(buffer))
+
+                else:
+                    self.data.append(float(buffer))
+
                 self.data_top += 1
 
-            # Pop the instruction after being read
-            self.instructions.pop(0)
+            elif self.instructions[self.ins_top][:4] == "CRVL":
+                address =  ""
+                for d in self.instructions[self.ins_top][5:]:
+                    address = f"{address}{d}"
 
+                address = int(address)
+                self.data.append(self.data[address])
+                self.data_top += 1
 
+            # Next instruction
+            self.ins_top += 1
 
     def compile(self):
         lexer = Lexer(self.source_code)
