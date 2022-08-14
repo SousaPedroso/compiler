@@ -18,12 +18,13 @@ class Semantic:
     # DO: DivisionOperation
     # EA: ExpressionAttribution
     # ID: IDent
-
+    # PPO: PushProductOperation
+    # PAO: PushAddOperation
 
     # Defines how each non terminal will be updated according to the operation
     operations = {"T": lambda T, V: T.update({V: ''}), "AS": lambda N: N.pop(),
-    "U": lambda V: -1*V, "R": input, "W": lambda V: print(V), "EX": lambda OP1, OP2: (OP1.pop(), OP2.pop()),
-    "NI": lambda N: N, "NR": lambda N: N, "ID": lambda I: I, "MO": "mul", "DO": "div", "SO": "sum", "SUO": "sub"}
+    "U": lambda V: -1*V, "R": input, "W": lambda V: print(V), "NI": lambda N: N,
+    "NR": lambda N: N, "ID": lambda I: I, "MO": "MULT", "DO": "DIVI", "SO": "SOMA", "SUO": "SUBT"}
 
     # Stores the rules to generate the pseudocode
     rules = {
@@ -33,13 +34,14 @@ class Semantic:
         36: {"ident": "U", "(": "U", "numero_int": "U", "numero_real": "U"},
         38: {"end": "R", ";": "R"},
         39: {"end": "W", ";": "W"},
-        40: {"end": "EX", ";": "EX", ")": "EX"},
         42: {"ident": "SO", "end": "SO", ";": "SO", "(": "SO", "+": "SO", "-": "SO", "numero_int": "SO", "numero_real": "SO"},
         43: {"ident": "SUO", "end": "SUO", ";": "SUO", "(": "SUO", "+": "SUO", "-": "SUO", "numero_int": "SUO", "numero_real": "SUO"},
         44: {"end": "NI", ";": "NI", "*": "NI", "/": "NI", "+": "NI", "-": "NI"},
         45: {"end": "NR", ";": "NR", "*": "NR", "/": "NR", "+": "NR", "-": "NR"},
         50: {"ident": "MO", "(": "MO", "numero_int": "MO", "numero_real": "MO"},
         51: {"ident": "DO", "(": "DO", "numero_int": "DO", "numero_real": "DO"},
+        55: {"end": "PPO", ";": "PPO", "+": "PPO", "-": "PPO"},
+        56: {"end": "PAO", ";": "PAO", ")": "PAO"},
         59: {"end": "ID", ";": "ID", "*": "ID", "/": "ID", "+": "ID", "-": "ID"}
     }
 

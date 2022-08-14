@@ -97,7 +97,6 @@ class Syntatic(Semantic):
             
             # If Terminal, update the value
             value = inputs[0].value
-
             # Action for terminals
             if self.action == "T":
                 # Check if it is ok
@@ -157,36 +156,36 @@ class Syntatic(Semantic):
                                 self.current_type = self.symbols[-1]
                             
                             elif rule_type == "AS":
-                                self.intermediary_code.append(f"ARMZ {tokens[-3].ident}\n")
+                                self.intermediary_code.append(f"ARMZ {self.rel_addresses[tokens[-3].ident]}\n")
 
                             elif rule_type == "U":
                                 self.intermediary_code.append("INVE\n")
                             
                             elif rule_type == "R":
                                 self.intermediary_code.append("LEIT\n")
+                                self.intermediary_code.append(f"ARMZ {self.rel_addresses[tokens[-2].ident]}\n")
                                 
                             elif rule_type == "W":
+                                self.intermediary_code.append(f"CRVL {self.rel_addresses[tokens[-2].ident]}\n")
                                 self.intermediary_code.append("IMPR\n")
-
-                            elif rule_type == "EX":
-                                operation = self.arithmetic[-1]
-                                if operation == "sum":
-                                    self.intermediary_code.append("SOMA\n")
-                                    
-                                elif operation == "sub":
-                                    self.intermediary_code.append("SUBT\n")
-                                    
-                                elif operation == "mul":
-                                    self.intermediary_code.append("MULT\n")
-
-                                else:
-                                    self.intermediary_code.append("DIVI\n")
 
                             elif rule_type == "NR" or rule_type == "NI":
                                 self.intermediary_code.append(f"CRCT {tokens[-1].input}\n")
 
                             elif rule_type == "ID":
                                 self.intermediary_code.append(f"CRVL {self.rel_addresses[tokens[-1].ident]}\n")
+
+                            elif rule_type == "MO" or rule_type == "DO":
+                                self.arithmetic.append(self.operations[rule[value]])
+
+                            elif rule_type == "PPO":
+                                # Respective operation from the state I50 or I51
+                                self.intermediary_code.append(f"{self.arithmetic[-1]}\n")
+
+                            elif rule_type == "PAO":
+                                 # Respective operation from the state I42 or I43
+                                self.intermediary_code.append(f"{self.arithmetic[-1]}\n")
+                            
 
                         # Check state for arithmetic operation
                         if self.states[-1] == 42 or self.states[-1] == 43 or self.states[-1] == 50 or self.states[-1] == 51:
