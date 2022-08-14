@@ -1,0 +1,15 @@
+program teste
+/* declaracao de variaveis */
+	real : a,b;
+	integer : c;
+
+/*  corpo * principal / */
+begin 
+	read(a); {real}
+	read(c); {integer}
+  b := -a * a + -a;
+  write(a);
+  write(b);
+  write(c)
+  {aqui termina o programa}
+end.
