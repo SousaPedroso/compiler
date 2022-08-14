@@ -20,3 +20,13 @@ None external package was used for this project, but for execute it you must ins
 ```
 python -m pip install .
 ```
+
+You can execute the programs through the <a href="./hm/HipoMaq.py">HipoMaq </a> which compiles and interprets text files like the examples on <a href="./tests">tests directory </a> passing two arguments: `source_code` with the relative or absolute path to compile the file and `dest_code` with the target absolute or relative path to save the object code. The commands below shows a example:
+
+```
+cd hm
+```
+
+```
+python HipoMaq.py ..\tests\ex01 ..\compiled
+```
