@@ -56,8 +56,8 @@ class Syntatic(Semantic):
     {"T": {"ident": ["r", "op_un", 0], "(": ["r", "op_un", 0], "-": ["s", 36], "numero_int": ["r", "op_un", 0], "numero_real": ["r", "op_un", 0]}, "N": {"termo": 47, "op_un": 35}}, # I41
     {"T": {"ident": ["r", "op_ad", 1], "end": ["r", "op_ad", 1], ";": ["r", "op_ad", 1], "(": ["r", "op_ad", 1], "+": ["r", "op_ad", 1], "-": ["r", "op_ad", 1], "numero_int": ["r", "op_ad", 1], "numero_real": ["r", "op_ad", 1]}}, # I42
     {"T": {"ident": ["r", "op_ad", 1], "end": ["r", "op_ad", 1], ";": ["r", "op_ad", 1], "(": ["r", "op_ad", 1], "+": ["r", "op_ad", 1], "-": ["r", "op_ad", 1], "numero_int": ["r", "op_ad", 1], "numero_real": ["r", "op_ad", 1]}}, # I43
-    {"T": {"end": ["r", "fator", 1], ";": ["r", "fator", 1], "*": ["r", "fator", 1], "/": ["r", "fator", 1], "+": ["r", "fator", 1], "-": ["r", "fator", 1]}}, # I44
-    {"T": {"end": ["r", "fator", 1], ";": ["r", "fator", 1], "*": ["r", "fator", 1], "/": ["r", "fator", 1], "+": ["r", "fator", 1], "-": ["r", "fator", 1]}}, # I45
+    {"T": {"end": ["r", "fator", 1], ";": ["r", "fator", 1], "*": ["r", "fator", 1], "/": ["r", "fator", 1], "+": ["r", "fator", 1], "-": ["r", "fator", 1], ")": ["r", "fator", 1]}}, # I44
+    {"T": {"end": ["r", "fator", 1], ";": ["r", "fator", 1], "*": ["r", "fator", 1], "/": ["r", "fator", 1], "+": ["r", "fator", 1], "-": ["r", "fator", 1], ")": ["r", "fator", 1]}}, # I45
     {"T": {"ident": ["r", "op_un", 0], "(": ["r", "op_un", 0], "-": ["s", 36], "numero_int": ["r", "op_un", 0], "numero_real": ["r", "op_un", 0]}, "N": {"expressao": 52, "termo": 34, "op_un": 35}}, # I46
     {"T": {"end": ["r", "outros_termos", 0], ";": ["r", "outros_termos", 0], ")": ["r", "outros_termos", 0], "+": ["s", 42], "-": ["s", 43]}, "N": {"outros_termos": 56, "op_ad": 41}}, # I47
     {"T": {"end": ["r", "termo", 3], ";": ["r", "termo", 3], ")": ["r", "termo", 3], "+": ["r", "termo", 3], "-": ["r", "termo", 3]}}, # I48
@@ -65,13 +65,13 @@ class Syntatic(Semantic):
     {"T": {"ident": ["r", "op_mul", 1], "(": ["r", "op_mul", 1], "numero_int": ["r", "op_mul", 1], "numero_real": ["r", "op_mul", 1]}}, # I50
     {"T": {"ident": ["r", "op_mul", 1], "(": ["r", "op_mul", 1], "numero_int": ["r", "op_mul", 1], "numero_real": ["r", "op_mul", 1]}}, # I51
     {"T": {")": ["s", 54]}}, # I52
-    {"T": {"end": ["r", "mais_fatores", 0], ";": ["r", "mais_fatores", 0], "*": ["s", 50], "/": ["s", 51], "+": ["r", "mais_fatores", 0], "-": ["r", "mais_fatores", 0]}, "N": {"mais_fatores": 55, "op_mul": 49}}, # I53
-    {"T": {"end": ["r", "fator", 3], ";": ["r", "fator", 3], "*": ["r", "fator", 3], "/": ["r", "fator", 3], "+": ["r", "fator", 3], "-": ["r", "fator", 3]}}, # I54
-    {"T": {"end": ["r", "mais_fatores", 3], ";": ["r", "mais_fatores", 3], "+": ["r", "mais_fatores", 3], "-": ["r", "mais_fatores", 3]}}, # I55
+    {"T": {"end": ["r", "mais_fatores", 0], ";": ["r", "mais_fatores", 0], "*": ["s", 50], "/": ["s", 51], "+": ["r", "mais_fatores", 0], "-": ["r", "mais_fatores", 0], ")": ["r", "mais_fatores", 0]}, "N": {"mais_fatores": 55, "op_mul": 49}}, # I53
+    {"T": {"end": ["r", "fator", 3], ";": ["r", "fator", 3], "*": ["r", "fator", 3], "/": ["r", "fator", 3], "+": ["r", "fator", 3], "-": ["r", "fator", 3], ")": ["r", "fator", 3]}}, # I54
+    {"T": {"end": ["r", "mais_fatores", 3], ";": ["r", "mais_fatores", 3], "+": ["r", "mais_fatores", 3], "-": ["r", "mais_fatores", 3], ")": ["r", "mais_fatores", 3]}}, # I55
     {"T": {"end": ["r", "outros_termos", 3], ";": ["r", "outros_termos", 3], ")": ["r", "outros_termos", 3]}}, # I56
     {"T": {"$": ["r", "programa", 4]}}, # I57
-    {"T": {"end": ["r", "mais_fatores", 0], ";": ["r", "mais_fatores", 0], "*": ["s", 50], "/": ["s", 51], "+": ["r", "mais_fatores", 0], "-": ["r", "mais_fatores", 0]}, "N": {"mais_fatores": 48, "op_mul": 49}}, # I58
-    {"T": {"end": ["r", "fator", 1], ";": ["r", "fator", 1], "*": ["r", "fator", 1], "/": ["r", "fator", 1], "+": ["r", "fator", 1], "-": ["r", "fator", 1]}} # I59
+    {"T": {"end": ["r", "mais_fatores", 0], ";": ["r", "mais_fatores", 0], "*": ["s", 50], "/": ["s", 51], "+": ["r", "mais_fatores", 0], "-": ["r", "mais_fatores", 0], ")": ["r", "mais_fatores", 0]}, "N": {"mais_fatores": 48, "op_mul": 49}}, # I58
+    {"T": {"end": ["r", "fator", 1], ";": ["r", "fator", 1], "*": ["r", "fator", 1], "/": ["r", "fator", 1], "+": ["r", "fator", 1], "-": ["r", "fator", 1], ")": ["r", "fator", 1]}} # I59
     ]
 
     def __init__(self, inputs):

@@ -33,7 +33,7 @@ Follow(expressao) = Follow(comando), ) = ;, end, )
 Follow(termo) = First(outros_termos) = +, -, λ = +, -, Follow(expressao), Follow(outros_termos) = +, -, ;, end, )
 Follow(outros_termos) = Follow(expressao) = ;, end, )
 Follow(op_un) = First(fator) = ident, numero_int, numero_real, (
-Follow(fator) = First(mais_fatores) = *, /, λ = *, /, Follow(termo), Follow(mais_fatores) = *, /, +, -, ;, end
-Follow(mais_fatores) = Follow(termo) = +, -, ;, end
+Follow(fator) = First(mais_fatores) = *, /, λ = *, /, Follow(termo), Follow(mais_fatores) = *, /, +, -, ;, end, )
+Follow(mais_fatores) = Follow(termo) = +, -, ;, end, )
 Follow(op_ad) = First(termo) = -, ident, numero_int, numero_real, (, λ = -, ident, numero_int, numero_real, (, First(outros_termos) = -, ident, numero_int, numero_real, (, +, -, λ = -, +, Follow(outros_termos) = -, +, ident, numero_int, numero_real, (, ;, end
 Follow(op_mul) = First(fator) = ident, numero_int, numero_real, (
