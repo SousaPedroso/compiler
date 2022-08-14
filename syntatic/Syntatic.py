@@ -136,7 +136,7 @@ class Syntatic(Semantic):
                             if allocate:
                                 self.rel_addresses[inputs[0].ident] =  last_address
                                 last_address += 1
-                                self.intermediary_code.append("ALME 1")
+                                self.intermediary_code.append("ALME 1\n")
                             else:
                                 raise RedeclarationError(f"Redeclaration of '{inputs[0].ident}'")
 
@@ -157,36 +157,36 @@ class Syntatic(Semantic):
                                 self.current_type = self.symbols[-1]
                             
                             elif rule_type == "AS":
-                                self.intermediary_code.append(f"ARMZ {tokens[-3].ident}")
+                                self.intermediary_code.append(f"ARMZ {tokens[-3].ident}\n")
 
                             elif rule_type == "U":
-                                self.intermediary_code.append("INVE")
+                                self.intermediary_code.append("INVE\n")
                             
                             elif rule_type == "R":
-                                self.intermediary_code.append("LEIT")
+                                self.intermediary_code.append("LEIT\n")
                                 
                             elif rule_type == "W":
-                                self.intermediary_code.append("IMPR")
+                                self.intermediary_code.append("IMPR\n")
 
                             elif rule_type == "EX":
                                 operation = self.arithmetic[-1]
                                 if operation == "sum":
-                                    self.intermediary_code.append("SOMA")
+                                    self.intermediary_code.append("SOMA\n")
                                     
                                 elif operation == "sub":
-                                    self.intermediary_code.append("SUBT")
+                                    self.intermediary_code.append("SUBT\n")
                                     
                                 elif operation == "mul":
-                                    self.intermediary_code.append("MULT")
+                                    self.intermediary_code.append("MULT\n")
 
                                 else:
-                                    self.intermediary_code.append("DIVI")
+                                    self.intermediary_code.append("DIVI\n")
 
                             elif rule_type == "NR" or rule_type == "NI":
-                                self.intermediary_code.append(f"CRCT {tokens[-1].input}")
+                                self.intermediary_code.append(f"CRCT {tokens[-1].input}\n")
 
                             elif rule_type == "ID":
-                                self.intermediary_code.append(f"CRVL {self.rel_addresses[tokens[-1].ident]}")
+                                self.intermediary_code.append(f"CRVL {self.rel_addresses[tokens[-1].ident]}\n")
 
                         # Check state for arithmetic operation
                         if self.states[-1] == 42 or self.states[-1] == 43 or self.states[-1] == 50 or self.states[-1] == 51:

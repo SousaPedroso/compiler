@@ -46,5 +46,5 @@ class Semantic:
     def __init__(self):
         self.real_variables = {}
         self.int_variables = {}
-        self.intermediary_code = ["INPP"]
+        self.intermediary_code = ["INPP\n"]
     
