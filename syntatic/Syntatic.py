@@ -92,6 +92,7 @@ class Syntatic(Semantic):
         tokens = []
         last_address = 0 # Increment the address for each variable
         allocate = True # Controls if a variable was declared two times and gives a error
+        unary = False # Controls if unary operator will be used
 
         while not(self.accepted):
             
@@ -159,7 +160,7 @@ class Syntatic(Semantic):
                                 self.intermediary_code.append(f"ARMZ {self.rel_addresses[tokens[-3].ident]}\n")
 
                             elif rule_type == "U":
-                                self.intermediary_code.append("INVE\n")
+                                unary = True
                             
                             elif rule_type == "R":
                                 self.intermediary_code.append("LEIT\n")
@@ -174,6 +175,10 @@ class Syntatic(Semantic):
 
                             elif rule_type == "ID":
                                 self.intermediary_code.append(f"CRVL {self.rel_addresses[tokens[-1].ident]}\n")
+                                # Checks unary
+                                if unary:
+                                    self.intermediary_code.append("INVE\n")
+                                    unary = False
 
                             elif rule_type == "MO" or rule_type == "DO":
                                 self.arithmetic.append(self.operations[rule[value]])
@@ -183,7 +188,7 @@ class Syntatic(Semantic):
                                 self.intermediary_code.append(f"{self.arithmetic[-1]}\n")
 
                             elif rule_type == "PAO":
-                                 # Respective operation from the state I42 or I43
+                                # Respective operation from the state I42 or I43
                                 self.intermediary_code.append(f"{self.arithmetic[-1]}\n")
                             
 

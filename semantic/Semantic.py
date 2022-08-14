@@ -22,9 +22,7 @@ class Semantic:
     # PAO: PushAddOperation
 
     # Defines how each non terminal will be updated according to the operation
-    operations = {"T": lambda T, V: T.update({V: ''}), "AS": lambda N: N.pop(),
-    "U": lambda V: -1*V, "R": input, "W": lambda V: print(V), "NI": lambda N: N,
-    "NR": lambda N: N, "ID": lambda I: I, "MO": "MULT", "DO": "DIVI", "SO": "SOMA", "SUO": "SUBT"}
+    operations = {"T": lambda T, V: T.update({V: ''}), "MO": "MULT", "DO": "DIVI", "SO": "SOMA", "SUO": "SUBT"}
 
     # Stores the rules to generate the pseudocode
     rules = {
