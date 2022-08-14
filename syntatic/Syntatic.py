@@ -84,6 +84,7 @@ class Syntatic(Semantic):
         self.current_type = "" # Stores the types for a variable
         self.arithmetic = []
         self.rel_addresses = {} # Stores the addresses for each variable
+        self.inv_rel_addresses = {} # Stores the variables for each address to check the type when doing operations
 
     def evaluate_input(self):
         # Abbreviation
@@ -134,6 +135,7 @@ class Syntatic(Semantic):
 
                             if allocate:
                                 self.rel_addresses[inputs[0].ident] =  last_address
+                                self.inv_rel_addresses[last_address] = inputs[0].ident
                                 last_address += 1
                                 self.intermediary_code.append("ALME 1\n")
                             else:

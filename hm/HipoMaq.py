@@ -25,6 +25,9 @@ class HipoMaq:
         self.instructions = None
         self.ins_top = None
         self.data_top = None
+        self.rel_address =  None
+        self.inv_rel_addresses = None
+        self.int_variables = None
 
     def interpret(self):
         self.data_top = -1
@@ -60,7 +63,13 @@ class HipoMaq:
                     address = f"{address}{d}"
 
                 address = int(address)
-                self.data[address] = self.data[self.data_top]
+                # If variable integer, force cast
+                inv_ad = self.inv_rel_addresses.get(address)
+                int_var = self.int_variables.get(inv_ad)
+                if int_var == None:
+                    self.data[address] = self.data[self.data_top]
+                else:
+                    self.data[address] = int(self.data[self.data_top])
                 self.data.pop()
                 self.data_top -= 1
 
@@ -68,6 +77,7 @@ class HipoMaq:
                 self.data[self.data_top] *= -1
 
             elif self.instructions[self.ins_top] == "SOMA":
+                # If variable integer, force cast
                 self.data[self.data_top-1] = self.data[self.data_top-1] + self.data[self.data_top]
                 self.data_top -= 1
                 self.data.pop()
@@ -127,6 +137,10 @@ class HipoMaq:
 
         syntatic = Syntatic(instructions)
         syntatic.evaluate_input()
+
+        self.int_variables = syntatic.int_variables
+        self.rel_address = syntatic.rel_addresses
+        self.inv_rel_addresses = syntatic.inv_rel_addresses
 
         with open(args.dest_code, "w") as object_code:
             object_code.writelines(syntatic.intermediary_code)
